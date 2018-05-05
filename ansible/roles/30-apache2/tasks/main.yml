@@ -1,0 +1,112 @@
+---
+- name: Install Apache2
+  become_user: root
+  become: true
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - apache2
+
+- name: Create config dirs
+  become_user: root
+  become: true
+  file:
+      path: "{{ item }}"
+      state: directory
+      mode: 0755
+  with_items:
+    - /etc/apache2/sites-available/aliases
+    - /etc/apache2/ssl
+
+- name: Create dirs
+  file:
+      path: "{{ item }}"
+      state: directory
+      mode: 0755
+  with_items:
+    - "{{ path.log }}"
+
+- name: Enable Apache2 modules
+  become_user: root
+  become: true
+  command: a2enmod {{ item }}
+  with_items:
+    - rewrite
+    - ssl
+
+- name: Change Apache2 user/group
+  become_user: root
+  become: true
+  lineinfile:
+    dest: /etc/apache2/envvars
+    regexp: "{{ item.search }}"
+    line: "{{ item.replace }}"
+    state: present
+  with_items:
+    - { search: '^export APACHE_RUN_USER=', replace: 'export APACHE_RUN_USER=vagrant'}
+    - { search: '^export APACHE_RUN_GROUP=', replace: 'export APACHE_RUN_GROUP=vagrant'}
+
+# In order Apache to distinguish between default config and dev-site
+- name: Add servername Apache2 config
+  become_user: root
+  become: true
+  template:
+    src: templates/servername.conf
+    dest: /etc/apache2/conf-available/servername.conf
+    owner: root
+    mode: 0644
+
+- name: Enable servername Apache2 config
+  become_user: root
+  become: true
+  command: a2enconf servername
+
+- name: Create self-signed SSL certificate
+  become_user: root
+  become: true
+  command: openssl req -new -nodes -x509 -subj "/C=UA/ST=Kharkiv/L=Kharkiv/O=IT/CN=${ansible_fqdn}" -days 3650 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt -extensions v3_ca
+  args:
+    creates: /etc/apache2/ssl/apache.crt
+
+- name: Determine virtual host root
+  set_fact:
+    document_root: "{% if wp.bedrock %}{{ path.wp }}/web{% else %}{{ path.wp }}{% endif %}"
+
+- name: Add virtual host config
+  become_user: root
+  become: true
+  template:
+    src: templates/site.conf
+    dest: /etc/apache2/sites-available/{{ ansible_hostname }}.conf
+    owner: root
+    mode: 0644
+
+- name: Add SSL virtual host config
+  become_user: root
+  become: true
+  template:
+    src: templates/site-ssl.conf
+    dest: /etc/apache2/sites-available/{{ ansible_hostname }}-ssl.conf
+    owner: root
+    mode: 0644
+
+- name: Enable virtual hosts
+  become_user: root
+  become: true
+  command: "a2ensite {{ item }}"
+  with_items:
+    - "{{ ansible_hostname }}.conf"
+    - "{{ ansible_hostname }}-ssl.conf"
+
+- name: Add logrotate for the new log
+  become_user: root
+  become: true
+  template:
+    src: templates/log.rotate.j2
+    dest: /etc/logrotate.d/apache-dev-log
+    owner: root
+    mode: 0644
+
+- name: Restart Apache2 server
+  become_user: root
+  become: true
+  service: name=apache2 state=restarted

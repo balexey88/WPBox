@@ -1,0 +1,8 @@
+---
+- name: Download WP-Cli
+  become_user: root
+  become: true
+  get_url:
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: "{{ path.bin }}/wp"
+    mode: a+x

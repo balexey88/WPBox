@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "WARNING! This will remove the vagrant box and all the files completely."
+read -p "Are you sure? [yes|NO]: " -r
+
+echo    # (optional) move to a new line
+
+if [[ $REPLY == 'yes' ]]
+then
+    vagrant destroy -f default
+    rm -rf .vagrant
+    rm -rf tmp
+    rm -rf log
+    rm -rf info
+    rm -rf test
+    rm -rf db
+    rm -rf www
+    rm -rf www/wp
+    rm -rf wordpress
+    rm -f ansible/playbook.retry
+    rm -f *.log
+    # rm -f conf.yml
+fi

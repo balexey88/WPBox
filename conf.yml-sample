@@ -1,0 +1,19 @@
+---
+# Virtual host configuration
+site:
+  host: 'wp.local'
+  ip: '192.168.33.100'
+  bedrock: true # Use Bedrock instead of normal Wordpress install
+  project: 'New Project'
+  db_prefix: 'wp_'
+  version: latest #  4.8.1
+  web:
+    # root: "" # web stuff locates in the root directory (/vagrant)
+    # wp: "" # Wordpress locates in the root of web directory
+    root: '/www' # web stuff locates under www (/vagrant/www)
+    wp: '/wp' # Wordpress locates under it's directory (e.g. /vagrant/www/wp)
+
+# hostmanager-aliases:
+#   - singlesites.dev
+#   - sample1.dev
+#   - sample1.singlesites.dev

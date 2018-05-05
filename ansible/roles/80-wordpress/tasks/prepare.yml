@@ -1,0 +1,18 @@
+---
+- name: Additional dirs
+  file:
+      path: "{{ item }}"
+      state: directory
+  with_items:
+    - "{{ path.wp }}"
+
+- name: Check if Wordpress is present
+  stat: "path={{ path.wp }}/wp-load.php"
+  register: wp_load_file
+
+- name: Download Wordpress
+  command: wp core download --version='{{ wp.version }}'
+  when: wp_load_file.stat.exists is defined and wp_load_file.stat.exists == false
+
+- name: Configure Wordpress
+  command: wp core config --dbname={{ db.wp.name }} --dbuser={{ db.wp.user }} --dbpass={{ db.wp.pass }} --dbprefix={{ db.wp.prefix }} --force

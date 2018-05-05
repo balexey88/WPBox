@@ -1,0 +1,26 @@
+---
+- name: Check if WP-Cli present
+  stat: "path={{ path.bin }}/wp"
+  register: wp_cli_file
+
+- name: Install WP-Cli
+  include_tasks: install.yml
+  when: wp_cli_file.stat.exists is defined and wp_cli_file.stat.exists == false
+
+- name: Create config dir
+  file:
+      path: ~/.wp-cli
+      state: directory
+
+- name: Determine virtual host root
+  set_fact:
+    document_root: "{% if wp.bedrock %}{{ path.wp }}/web/wp{% else %}{{ path.wp }}{% endif %}"
+
+- name: Add default config
+  template:
+    src: templates/config.yml.j2
+    dest: ~/.wp-cli/config.yml
+
+- name: Install 'dotenv' plugin
+  command: wp package install aaemnnosttv/wp-cli-dotenv-command:^1.0
+  when: wp.bedrock

@@ -1,0 +1,72 @@
+---
+base_path: /vagrant
+
+#Other paths
+path:
+  root: "{{ base_path }}"
+  web: "{{ base_path }}{{ site.web.root }}"
+  wp: "{{ base_path }}{{ site.web.root }}{{ site.web.wp }}"
+  bin: "/usr/local/bin"
+  info: "{{ base_path }}{{ site.web.root }}/info"
+  phpmyadmin: "{{ base_path }}{{ site.web.root }}/my"
+  test: "{{ base_path }}{{ site.web.root }}/test"
+  log: "{{ base_path }}/log"
+  db: "{{ base_path }}/db"
+
+# Wordpress configuration
+wp:
+  version: "{{ site.version }}" # the version of Wordpress to load when normal install
+  bedrock: "{{ site.bedrock }}"
+  title: "{{ site.project }}"
+  user: 'admin'
+  pass: '1'
+  email: 'a.bolgunovsky@codetiburon.com'
+  langs: []
+  #langs: [fr_FR, de_DE, es_ES]
+  uninstall:
+    plugins: ['akismet', 'hello.php']
+    themes: ['twentyfourteen', 'twentyfifteen', 'twentysixteen']
+  install:
+    plugins:
+      - disable-emails
+      - wp-mail-logging
+      - https://github.com/wp-sync-db/wp-sync-db/archive/master.zip
+      - https://github.com/wp-sync-db/wp-sync-db-media-files/archive/master.zip
+
+dump: "{{ base_path }}/db/dump.sql"
+
+# Ubuntu stuff
+os:
+  packages:
+    - aptitude
+    - curl
+    - gettext
+    - git
+    - mc
+    - wget
+    - zip
+    - npm
+    - nodejs-legacy
+  php:
+    ver: 7.0
+    mem: '512M'
+
+# Database configuration
+db:
+  # server: mysql
+  server: mariadb
+  root_pass: 'root'
+  wp:
+    name: 'wp'
+    user: 'wp'
+    pass: 'wp'
+    prefix: "{{ site.db_prefix }}"
+
+# Virtual host configuration
+box:
+  memsize: 2048
+  cpus: 2
+  sync: 'nfs'
+
+# Other
+verbous: true

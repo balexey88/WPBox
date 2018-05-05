@@ -1,0 +1,50 @@
+---
+- name: Additional dirs
+  file:
+      path: "{{ item }}"
+      state: directory
+  with_items:
+    - "{{ path.wp }}"
+
+- name: Check if Wordpress is present
+  stat: "path={{ path.wp }}/composer.json"
+  register: wp_present
+
+- name: Download Bedrock
+  composer:
+    command: "create-project"
+    arguments: "roots/bedrock wp"
+    working_dir: "{{ path.web }}"
+  when: wp_present.stat.exists is defined and wp_present.stat.exists == false
+
+- name: Update dependencies
+  composer:
+    command: "update"
+    working_dir: "{{ path.wp }}"
+
+- name: Check if config is present
+  stat: "path={{ path.wp }}/.env"
+  register: env_present
+
+- name: Create config file
+  copy:
+    src: "{{ path.wp }}/.env.example"
+    dest: "{{ path.wp }}/.env"
+  when: env_present.stat.exists is defined and env_present.stat.exists == false
+
+- name: Configure Wordpress
+  command: wp dotenv set "{{ item.key }}" "{{ item.value }}"
+  args:
+    chdir: "{{ path.wp }}"
+  with_items:
+    - { key: 'DB_NAME', value: "{{ db.wp.name }}" }
+    - { key: 'DB_USER', value: "{{ db.wp.user }}" }
+    - { key: 'DB_PASSWORD', value: "{{ db.wp.pass }}" }
+    - { key: 'DB_PREFIX', value: "{{ db.wp.prefix }}" }
+    - { key: 'WP_ENV', value: 'development' }
+    - { key: 'WP_HOME', value: "http://{{ ansible_fqdn }}" }
+
+- name: Generate salts
+  args:
+    chdir: "{{ path.wp }}"
+  command: wp dotenv salts regenerate

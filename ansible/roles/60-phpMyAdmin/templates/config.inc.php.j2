@@ -1,0 +1,10 @@
+<?php
+
+/* Authentication type */
+$cfg['Servers'][1]['auth_type'] = 'config';
+/* Server parameters */
+$cfg['Servers'][1]['host'] = 'localhost';
+$cfg['Servers'][1]['compress'] = false;
+$cfg['Servers'][1]['AllowNoPassword'] = false;
+$cfg['Servers'][1]['user'] = '{{ db.wp.user }}';
+$cfg['Servers'][1]['password'] = '{{ db.wp.pass }}';

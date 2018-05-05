@@ -1,0 +1,22 @@
+---
+- name: Check if phpMyAdmin present
+  stat: path="{{ path.phpmyadmin }}"
+  register: phpmyadmin_present
+
+- name: Install phpMyAdmin
+  include_tasks: install.yml
+  when: phpmyadmin_present.stat.exists is defined and phpmyadmin_present.stat.exists == false
+
+- name: Additional alias config
+  become_user: root
+  become: true
+  template:
+    src: templates/my.conf.j2
+    dest: /etc/apache2/sites-available/aliases/my.conf
+    owner: root
+    mode: 0644
+
+- name: Restart Apache2 server
+  become_user: root
+  become: true
+  service: name=apache2 state=restarted

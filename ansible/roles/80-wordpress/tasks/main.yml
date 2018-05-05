@@ -1,0 +1,4 @@
+---
+- name: Install Wordpress?
+  include_tasks: prepare.yml
+  when: not wp.bedrock

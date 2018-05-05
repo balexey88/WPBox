@@ -1,0 +1,37 @@
+---
+- name: Install MariaDB
+  become_user: root
+  become: true
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - mariadb-server
+    - python-mysqldb
+
+- name: Check to see if MySQL password already reset
+  stat: path=~/.my.cnf
+  register: mysql_myconf_file
+
+- name: Update MySQL root password
+  include_tasks: root_passwd.yml
+  when: mysql_myconf_file.stat.exists is defined and mysql_myconf_file.stat.exists == false
+
+- name: Create MySQL database for Wordpress
+  mysql_db:
+    name: "{{ db.wp.name }}"
+    state: present
+  register: wp_db_created
+
+- name: Create MySQL user for Wordpress
+  mysql_user:
+      name: "{{ db.wp.user }}"
+      password: "{{ db.wp.pass }}"
+      host: "%"
+      priv: "*.*:ALL,GRANT"
+      state: present
+
+- name: Additional dirs
+  file:
+      path: "{{ item }}"
+      state: directory
+  with_items:
+    - "{{ path.db }}"

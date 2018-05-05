@@ -1,0 +1,8 @@
+---
+- name: Check if Composer present
+  stat: "path={{ path.bin }}/composer"
+  register: composer_file
+
+- name: Install Composer
+  include_tasks: install.yml
+  when: composer_file.stat.exists is defined and composer_file.stat.exists == false

@@ -1,0 +1,54 @@
+---
+- name: Additional dirs
+  file:
+      path: "{{ item }}"
+      state: directory
+      mode: 0755
+  with_items:
+    - "{{ path.info }}"
+    - "{{ path.test }}"
+
+- name: Add alias for /info
+  become_user: root
+  become: true
+  template:
+    src: templates/info.conf.j2
+    dest: /etc/apache2/sites-available/aliases/info.conf
+    owner: root
+    mode: 0644
+
+- name: Place PHP-Info file for http://{{ ansible_fqdn }}/info
+  template:
+    src: templates/info.php.j2
+    dest: "{{ path.info }}/index.php"
+
+- name: Add alias for /test
+  become_user: root
+  become: true
+  template:
+    src: templates/test.conf.j2
+    dest: /etc/apache2/sites-available/aliases/test.conf
+    owner: root
+    mode: 0644
+
+- name: Disable all PHP versions
+  become_user: root
+  become: true
+  command: a2dismod {{ item }}
+  with_items:
+    - php5.6
+    - php7.0
+    # - php7.1
+    # - php7.2
+
+- name: Enable PHP{{ os.php.ver }}
+  become_user: root
+  become: true
+  command: a2enmod {{ item }}
+  with_items:
+    - "php{{ os.php.ver }}"
+
+- name: Restart Apache2 server
+  become_user: root
+  become: true
+  service: name=apache2 state=restarted

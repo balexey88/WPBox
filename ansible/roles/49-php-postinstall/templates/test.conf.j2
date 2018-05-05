@@ -1,0 +1,7 @@
+Alias /test {{ path.test }}
+
+<Directory {{ path.test }}>
+  Options Indexes FollowSymLinks Includes ExecCGI
+  AllowOverride All
+  Require all granted
+</Directory>

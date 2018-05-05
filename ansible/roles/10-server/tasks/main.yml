@@ -1,0 +1,33 @@
+---
+- name: Install Packages
+  become_user: root
+  become: true
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ os.packages }}"
+
+- name: Upgrade system
+  become_user: root
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Generate locales
+  become_user: root
+  become: true
+  command: locale-gen en_US en_US.UTF-8 uk_UA uk_UA.UTF-8
+
+- name: Update locales
+  become_user: root
+  become: true
+  command: update-locale
+
+- name: SSH to vagrant by default
+  lineinfile:
+    dest: /home/vagrant/.bashrc
+    line: "cd {{ base_path }}"
+    state: present
+    insertafter: EOF

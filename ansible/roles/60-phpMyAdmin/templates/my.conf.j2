@@ -1,0 +1,7 @@
+Alias /my {{ path.phpmyadmin }}
+
+<Directory {{ path.phpmyadmin }}>
+  Options Indexes FollowSymLinks Includes ExecCGI
+  AllowOverride All
+  Require all granted
+</Directory>

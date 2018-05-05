@@ -1,0 +1,4 @@
+---
+- name: Install Bedrock?
+  include_tasks: prepare.yml
+  when: wp.bedrock

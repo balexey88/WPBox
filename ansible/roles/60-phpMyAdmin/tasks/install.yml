@@ -1,0 +1,19 @@
+---
+- name: Clone phpMyAdmin repo
+  git:
+    repo: https://github.com/phpmyadmin/phpmyadmin.git
+    clone: yes
+    dest: "{{ path.phpmyadmin }}"
+    depth: 1
+    version: STABLE
+
+- name: Update dependencies
+  composer:
+    command: "update"
+    arguments: "--no-dev"
+    working_dir: "{{ path.phpmyadmin }}"
+
+- name: Add default config
+  template:
+    src: templates/config.inc.php.j2
+    dest: "{{ path.phpmyadmin }}/config.inc.php"

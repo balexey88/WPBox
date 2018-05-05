@@ -1,0 +1,48 @@
+---
+- name: Install MySQL Server
+  become_user: root
+  become: true
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - mysql-server-5.5
+    - python-mysqldb
+
+- name: Check to see if MySQL password already reset
+  stat: path=~/.my.cnf
+  register: mysql_myconf_file
+
+- name: Update MySQL root password
+  include_tasks: root_passwd.yml
+  when: mysql_myconf_file.stat.exists is defined and mysql_myconf_file.stat.exists == false
+
+- name: Configure default encoding and collation for MySQL
+  become_user: root
+  become: true
+  ini_file: dest=/etc/mysql/my.cnf section={{ item.section }} option={{ item.option }} value={{ item.value }}
+  with_items:
+    - { section: 'mysqld', option: 'collation-server', value: 'utf8mb4_unicode_ci' }
+    - { section: 'mysqld', option: 'character-set-server', value: 'utf8mb4' }
+
+- name: Create MySQL database for Wordpress
+  mysql_db: name={{ wp.db.name }} state=present collation=utf8_general_ci encoding=utf8
+  register: wp_db_created
+
+- name: Create MySQL user for Wordpress
+  mysql_user: name={{ wp.db.user }} password={{ wp.db.pass }} host="%" priv=*.*:ALL,GRANT state=present
+
+- name: Restart MySQL server
+  become_user: root
+  become: true
+  service: name=mysql state=restarted
+
+- name: Check if MySQL dump is present
+  stat: path={{ wp.db.dump }}
+  register: mysql_dump_file
+  when: wp_db_created.changed
+
+- name: Import Database
+  mysql_db:
+    name: "{{ wp.db.name }}"
+    state: import
+    target: "{{ wp.db.dump }}"
+  when: mysql_dump_file.stat is defined and mysql_dump_file.stat.exists is defined and mysql_dump_file.stat.exists == true

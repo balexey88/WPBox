@@ -1,0 +1,62 @@
+---
+- name: Check if Wordpress installed
+  command: wp core is-installed
+  ignore_errors: true
+  register: is_installed
+
+- name: Install Wordpress
+  command: wp core install --url=http://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user }} --admin_password={{ wp.pass }} --admin_email={{ wp.email }}
+  when: is_installed|failed
+
+- name: Configure Wordpress
+  lineinfile:
+    dest: "{{ path.wp }}/wp-config.php"
+    regexp: "{{ item.search }}"
+    line: "{{ item.replace }}"
+    state: present
+    insertbefore: "^(.*)That's all, stop editing! Happy blogging."
+  with_items:
+    - { search: "^define.*WP_DEBUG", replace: "define( 'WP_DEBUG', true );"}
+    - { search: "^define.*CONCATENATE_SCRIPTS", replace: "define( 'CONCATENATE_SCRIPTS', false );"}
+    - { search: "^define.*WP_MEMORY_LIMIT", replace: "define( 'WP_MEMORY_LIMIT', '{{ os.php.mem }}' );"}
+  when: not wp.bedrock
+
+- name: Configure Wordpress (bedrock)
+  command: wp dotenv set "{{ item.key }}" "{{ item.value }}"
+  args:
+    chdir: "{{ path.wp }}"
+  with_items:
+    - { key: 'WP_DEBUG', value: true }
+    - { key: 'CONCATENATE_SCRIPTS', value: false }
+    - { key: 'WP_MEMORY_LIMIT', value: "{{ os.php.mem }}" }
+  when: wp.bedrock
+
+- name: Uninstall default plugins
+  command: wp plugin uninstall {{ item }}
+  with_items: "{{ wp.uninstall.plugins }}"
+  ignore_errors: true
+
+- name: Uninstall default themes
+  command: wp theme uninstall {{ item }}
+  with_items: "{{ wp.uninstall.themes }}"
+  ignore_errors: true
+
+- name: Install plugins
+  command: wp plugin install {{ item }} --activate
+  with_items: "{{ wp.install.plugins }}"
+  ignore_errors: true
+
+- name: Install languages
+  command: wp core language install {{ item }}
+  with_items: "{{ wp.langs }}"
+  ignore_errors: true
+
+- name: Set default options
+  command: wp option update '{{ item.name }}' '{{ item.value }}' --format='{{ item.format }}'
+  with_items:
+    - { name: 'blog_public', value: 0, format: plaintext }
+    - { name: 'default_comment_status', value: '', format: plaintext }
+    - { name: 'comment_registration', value: 1, format: plaintext }
+
+- name: Update permalink structure
+  command: wp rewrite structure '/%postname%/' --hard
