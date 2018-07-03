@@ -5,7 +5,7 @@
   register: is_installed
 
 - name: Install WordPress
-  command: wp core install --url=http://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user.login }} --admin_password={{ wp.user.pass }} --admin_email={{ wp.user.email }}
+  command: wp core install --url=https://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user.login }} --admin_password={{ wp.user.pass }} --admin_email={{ wp.user.email }}
   when: is_installed|failed
 
 - name: Configure WordPress
