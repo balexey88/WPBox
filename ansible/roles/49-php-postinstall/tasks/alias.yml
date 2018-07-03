@@ -21,10 +21,10 @@
     src: templates/info.php.j2
     dest: "{{ dirs.base }}{{ dirs.web }}/info/index.php"
 
-# - name: Place generic info file for http://{{ ansible_fqdn }}/box
-#   template:
-#     src: templates/box.php.j2
-#     dest: "{{ dirs.base }}{{ dirs.web }}/box/index.php"
+- name: Place generic info file for http://{{ ansible_fqdn }}/box
+  template:
+    src: templates/box.php.j2
+    dest: "{{ dirs.base }}{{ dirs.web }}/box/index.php"
 
 # - name: Place generic box info file
 #   template:

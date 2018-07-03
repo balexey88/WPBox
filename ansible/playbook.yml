@@ -7,8 +7,8 @@
     - vars.yml
   roles:
     - 10-server
-    - 20-mysql
-    - 25-mariadb
+    # - 20-mysql
+    # - 25-mariadb
     # - 30-apache2
     # - 40-php5.6
     # - 45-php7

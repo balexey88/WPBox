@@ -29,4 +29,7 @@ apt install nfs-kernel-server
 vagrant up
 ```
 
-* For the list of available tools and options please visit the http://[your box name]/box
+* For the list of available tools and options please visit
+``` PHP
+http://[your box name]/box
+```

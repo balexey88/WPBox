@@ -1,4 +1,8 @@
 ---
+# - name: test
+#   debug:
+#     msg: "Role path test: {{ role_path }}"
+
 - name: Install Packages
   become_user: root
   become: true

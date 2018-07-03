@@ -33,10 +33,12 @@ path:
   web: "{{ dirs.base }}{{ dirs.web }}"
   wp: "{{ dirs.base }}{{ dirs.web }}{{ dirs.wp }}"
   bin: "/usr/local/bin"
-  info: "{{ dirs.base }}{{ dirs.web }}/info"
-  phpmyadmin: "{{ dirs.base }}{{ dirs.web }}/my"
-  test: "{{ dirs.base }}{{ dirs.web }}/test"
   log: "{{ dirs.base }}/log"
+  phpmyadmin: "{{ dirs.base }}{{ dirs.web }}/my"
+  aliases:
+      - 'test'
+      - 'info'
+      - 'box'
 
 # WordPress configuration
 wp:

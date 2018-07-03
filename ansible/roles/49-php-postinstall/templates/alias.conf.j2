@@ -1,0 +1,7 @@
+Alias /{{ item }} {{ dirs.base }}{{ dirs.web }}/{{ item }}
+
+<Directory {{ dirs.base }}{{ dirs.web }}/{{ item }}>
+  Options Indexes FollowSymLinks Includes ExecCGI
+  AllowOverride All
+  Require all granted
+</Directory>
