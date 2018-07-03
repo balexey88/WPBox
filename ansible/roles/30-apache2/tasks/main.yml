@@ -63,7 +63,7 @@
 - name: Create self-signed SSL certificate
   become_user: root
   become: true
-  command: openssl req -new -nodes -x509 -subj "/C=UA/ST=Kharkiv/L=Kharkiv/O=IT/CN=${ansible_fqdn}" -days 3650 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt -extensions v3_ca
+  command: openssl req -new -nodes -x509 -subj "/C=UA/ST=Kharkiv/L=Kharkiv/O=IT/CN={{ ansible_fqdn }}" -days 3650 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt -extensions v3_ca
   args:
     creates: /etc/apache2/ssl/apache.crt
 
