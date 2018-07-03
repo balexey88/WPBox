@@ -124,6 +124,6 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", inline: "service apache2 restart", run: "always", privileged: "false"
 
-    config.vm.post_up_message = "Vagrant Box up and running!" +
+    config.vm.post_up_message = "Vagrant Box up and running! " +
         "See more information and tools available at https://" + settings['box']['name'] + "/box"
 end
