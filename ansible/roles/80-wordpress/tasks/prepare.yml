@@ -6,13 +6,13 @@
   with_items:
     - "{{ path.wp }}"
 
-- name: Check if Wordpress is present
+- name: Check if WordPress is present
   stat: "path={{ path.wp }}/wp-load.php"
   register: wp_load_file
 
-- name: Download Wordpress
+- name: Download WordPress
   command: wp core download --version='{{ wp.version }}'
   when: wp_load_file.stat.exists is defined and wp_load_file.stat.exists == false
 
-- name: Configure Wordpress
-  command: wp core config --dbname={{ db.wp.name }} --dbuser={{ db.wp.user }} --dbpass={{ db.wp.pass }} --dbprefix={{ db.wp.prefix }} --force
+- name: Configure WordPress
+  command: wp core config --dbname={{ wp.db.name }} --dbuser={{ wp.db.user }} --dbpass={{ wp.db.pass }} --dbprefix={{ wp.db.prefix }} --force

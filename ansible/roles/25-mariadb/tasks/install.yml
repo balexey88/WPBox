@@ -15,23 +15,16 @@
   include_tasks: root_passwd.yml
   when: mysql_myconf_file.stat.exists is defined and mysql_myconf_file.stat.exists == false
 
-- name: Create MySQL database for Wordpress
+- name: Create MySQL database for WordPress
   mysql_db:
-    name: "{{ db.wp.name }}"
+    name: "{{ wp.db.name }}"
     state: present
   register: wp_db_created
 
-- name: Create MySQL user for Wordpress
+- name: Create MySQL user for WordPress
   mysql_user:
-      name: "{{ db.wp.user }}"
-      password: "{{ db.wp.pass }}"
+      name: "{{ wp.db.user }}"
+      password: "{{ wp.db.pass }}"
       host: "%"
       priv: "*.*:ALL,GRANT"
       state: present
-
-- name: Additional dirs
-  file:
-      path: "{{ item }}"
-      state: directory
-  with_items:
-    - "{{ path.db }}"

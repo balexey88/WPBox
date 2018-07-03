@@ -28,6 +28,6 @@
 - name: SSH to vagrant by default
   lineinfile:
     dest: /home/vagrant/.bashrc
-    line: "cd {{ base_path }}"
+    line: "cd {{ path.root }}"
     state: present
     insertafter: EOF
