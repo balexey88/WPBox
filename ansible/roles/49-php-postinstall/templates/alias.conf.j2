@@ -1,6 +1,6 @@
-Alias /info {{ path.info }}
+Alias /{{ item }} {{ alias_path }}
 
-<Directory {{ path.info }}>
+<Directory {{ alias_path }}>
   Options Indexes FollowSymLinks Includes ExecCGI
   AllowOverride All
   Require all granted

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{ box.name }} info</title>
+    </head>
+
+    <body>
+        <h1>{{ box.name }} info</h1>
+
+        <h2>Databases</h2>
+
+        <p>Using <strong>{{ db.server }}</strong> as database server. Admin credentials <kbd>root</kbd> / <kbd>root</kbd>, WordPress database user credentials <kbd>wp</kbd> / <kbd>wp</kbd>.</p>
+        <p><strong>phpMyAdmin</strong> is available at <a href="http://{{ ansible_fqdn }}/my" target="_blank">/my</a></p>
+
+        <h2>Web-server</h2>
+
+        <p>Using <strong>Apache</strong> as a web-server. Self-signed SSL-certificate added, <a href="https://{{ ansible_fqdn }}" target="_blank">SSL version</a> of the site is available. Logs are available in the <kbd>/log</kbd> subfolder of the project.</p>
+        <p>Several <strong>PHP</strong> versions installed. Current version is {{ php.default }}, view <a href="https://{{ ansible_fqdn }}/info" target="_blank">phpinfo()</a></p>
+    </body>
+</html>

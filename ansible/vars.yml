@@ -1,28 +1,60 @@
+# Main configuration file. Settings could be ovewritten by the conf.yml
+# in the project's root folder
 ---
-base_path: /vagrant
+# Host configuration
+box:
+  name: 'wp.wp' # domain name
+  ip: '192.168.33.100'
+  memsize: 2048
+  cpus: 2
+  sync: 'nfs'
+  timezone: 'Europe/Kiev'
+  packages:
+    - aptitude
+    - curl
+    - gettext
+    - git
+    - mc
+    - wget
+    - zip
+    - ntp
+    # - npm
+    # - nodejs-legacy
 
-#Other paths
+# Base directory names
+dirs:
+  base: '/vagrant' # base path on guest
+  web: '/www' # directory for web stuff
+  wp: '/wp' # WordPress directory
+
+# Other paths
 path:
-  root: "{{ base_path }}"
-  web: "{{ base_path }}{{ site.web.root }}"
-  wp: "{{ base_path }}{{ site.web.root }}{{ site.web.wp }}"
+  root: "{{ dirs.base }}"
+  web: "{{ dirs.base }}{{ dirs.web }}"
+  wp: "{{ dirs.base }}{{ dirs.web }}{{ dirs.wp }}"
   bin: "/usr/local/bin"
-  info: "{{ base_path }}{{ site.web.root }}/info"
-  phpmyadmin: "{{ base_path }}{{ site.web.root }}/my"
-  test: "{{ base_path }}{{ site.web.root }}/test"
-  log: "{{ base_path }}/log"
-  db: "{{ base_path }}/db"
+  log: "{{ dirs.base }}/log"
+  phpmyadmin: "{{ dirs.base }}{{ dirs.web }}/my"
+  aliases:
+      - 'test'
+      - 'info'
+      - 'box'
 
-# Wordpress configuration
+# WordPress configuration
 wp:
-  version: "{{ site.version }}" # the version of Wordpress to load when normal install
-  bedrock: "{{ site.bedrock }}"
-  title: "{{ site.project }}"
-  user: 'admin'
-  pass: '1'
-  email: 'a.bolgunovsky@codetiburon.com'
-  langs: []
-  #langs: [fr_FR, de_DE, es_ES]
+  version: latest # 'latest', 'nightly' or specific number (e.g. '4.8.1')
+  bedrock: true # 'true' for Bedrock, 'false' for normal WordPress install
+  title: 'New Project'
+  langs: [] # for example: '[fr_FR, de_DE, es_ES]'
+  user: # default user
+    login: 'admin'
+    pass: '1'
+    email: 'a.bolgunovsky@codetiburon.com'
+  db:
+    name: 'wp'
+    user: 'wp'
+    pass: 'wp'
+    prefix: 'wp_'
   uninstall:
     plugins: ['akismet', 'hello.php']
     themes: ['twentyfourteen', 'twentyfifteen', 'twentysixteen']
@@ -33,40 +65,27 @@ wp:
       - https://github.com/wp-sync-db/wp-sync-db/archive/master.zip
       - https://github.com/wp-sync-db/wp-sync-db-media-files/archive/master.zip
 
-dump: "{{ base_path }}/db/dump.sql"
+# Database configuration
+db:
+  server: MariaDB # 'MySQL' or 'MariaDB'
+  root_pass: 'root'
+
+# PHP configuration
+php:
+  default: 7.0
+  mem: '512M'
 
 # Ubuntu stuff
 os:
-  packages:
-    - aptitude
-    - curl
-    - gettext
-    - git
-    - mc
-    - wget
-    - zip
-    - npm
-    - nodejs-legacy
   php:
     ver: 7.0
     mem: '512M'
 
-# Database configuration
-db:
-  # server: mysql
-  server: mariadb
-  root_pass: 'root'
-  wp:
-    name: 'wp'
-    user: 'wp'
-    pass: 'wp'
-    prefix: "{{ site.db_prefix }}"
-
-# Virtual host configuration
-box:
-  memsize: 2048
-  cpus: 2
-  sync: 'nfs'
-
 # Other
 verbous: true
+
+# Additional domains
+# hostmanager-aliases:
+#   - singlesites.dev
+#   - sample1.dev
+#   - sample1.singlesites.dev

@@ -1,21 +1,35 @@
-# Project Name
+# WordPress Vagrant box
 
-The sites uses Vagrant Box as development environment.
-VirtualBox's IP address is **IP Address**.
-The Wordpress website is [http://hostname.dev/](http://hostname.dev/)
+### Requiremenets
 
-To view php info use [http://hostname.dev/info](http://hostname.dev/info)
+* Install Virtual Box (>=5.1 version is preferred) <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">Download</a>
 
-### Apache log
+* Install Vagrant (>=2.0 version is preferred) <a href="https://www.vagrantup.com/downloads.html" target="_blank">Download</a>
 
-Log files are located in `log/` subfolder.
+* Install Vagrant plugins:
+``` bash
+vagrant plugin install vagrant-hostmanager
+vagrant plugin install hostmanager
+```
 
-### Database tools and features
+* On Ubuntu to make NFS synchronization work you need to install **nfs-kernel-server** package:
+``` bash
+apt install nfs-kernel-server
+```
+---
 
-Development database dumps are located in `db/` subfolder. To create a database dump right from your host machine:
-- `tools/make_dump` will create the dump in `db/dump.sql`
-- run `tools/import_dump` to import `db/dump.sql`
+### Installation
 
-**MySQL** admin credentials are *root/root*. There is also a default MySQL *wp/wp* user account with an access to all databases.
+* In the root folder of the project copy configuration file `conf.yml-sample` to `conf.yml`
 
-**phpMyAdmin** is available on [http://hostname.dev/my](http://hostname.dev/my)
+* Adjust the options in `conf.yml`, at least `box.name` and `box.ip` for domain name and IP address. For the list of all available options refer to `ansible/vars.yml`
+
+* Run
+``` bash
+vagrant up
+```
+
+* For the list of available tools and options please visit
+``` PHP
+http://[your box name]/box
+```

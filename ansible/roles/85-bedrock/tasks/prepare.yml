@@ -6,7 +6,7 @@
   with_items:
     - "{{ path.wp }}"
 
-- name: Check if Wordpress is present
+- name: Check if WordPress is present
   stat: "path={{ path.wp }}/composer.json"
   register: wp_present
 
@@ -32,15 +32,15 @@
     dest: "{{ path.wp }}/.env"
   when: env_present.stat.exists is defined and env_present.stat.exists == false
 
-- name: Configure Wordpress
+- name: Configure WordPress
   command: wp dotenv set "{{ item.key }}" "{{ item.value }}"
   args:
     chdir: "{{ path.wp }}"
   with_items:
-    - { key: 'DB_NAME', value: "{{ db.wp.name }}" }
-    - { key: 'DB_USER', value: "{{ db.wp.user }}" }
-    - { key: 'DB_PASSWORD', value: "{{ db.wp.pass }}" }
-    - { key: 'DB_PREFIX', value: "{{ db.wp.prefix }}" }
+    - { key: 'DB_NAME', value: "{{ wp.db.name }}" }
+    - { key: 'DB_USER', value: "{{ wp.db.user }}" }
+    - { key: 'DB_PASSWORD', value: "{{ wp.db.pass }}" }
+    - { key: 'DB_PREFIX', value: "{{ wp.db.prefix }}" }
     - { key: 'WP_ENV', value: 'development' }
     - { key: 'WP_HOME', value: "http://{{ ansible_fqdn }}" }
 

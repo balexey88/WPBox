@@ -1,14 +1,14 @@
 ---
-- name: Check if Wordpress installed
+- name: Check if WordPress installed
   command: wp core is-installed
   ignore_errors: true
   register: is_installed
 
-- name: Install Wordpress
-  command: wp core install --url=http://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user }} --admin_password={{ wp.pass }} --admin_email={{ wp.email }}
+- name: Install WordPress
+  command: wp core install --url=http://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user.login }} --admin_password={{ wp.user.pass }} --admin_email={{ wp.user.email }}
   when: is_installed|failed
 
-- name: Configure Wordpress
+- name: Configure WordPress
   lineinfile:
     dest: "{{ path.wp }}/wp-config.php"
     regexp: "{{ item.search }}"
@@ -21,7 +21,7 @@
     - { search: "^define.*WP_MEMORY_LIMIT", replace: "define( 'WP_MEMORY_LIMIT', '{{ os.php.mem }}' );"}
   when: not wp.bedrock
 
-- name: Configure Wordpress (bedrock)
+- name: Configure WordPress (bedrock)
   command: wp dotenv set "{{ item.key }}" "{{ item.value }}"
   args:
     chdir: "{{ path.wp }}"

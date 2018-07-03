@@ -11,18 +11,24 @@
 
 require 'yaml'
 
-settings_file       = File.join( __dir__, 'conf.yml')
+# Load custom config
+conf_file           = File.join( __dir__, 'conf.yml')
 
-if !File.exist?(settings_file)
+if !File.exist?(conf_file)
     puts '* Config file missing'
     puts '* Please copy conf.yml-sample to conf.yml and configure your box'
     exit
 end
 
-settings            = YAML.load_file( settings_file )
+conf                = YAML.load_file( conf_file )
+
+# Load global config and merge with custom
 
 settings_file       = File.join( __dir__, 'ansible/vars.yml')
-settings            += YAML.load_file( settings_file )
+settings            = YAML.load_file( settings_file )
+
+settings.deep_merge!( conf ) # puts settings.to_yaml.gsub("\n-", "\n\n-")
+
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -36,8 +42,8 @@ Vagrant.configure(2) do |config|
     # Every Vagrant development environment requires a box. You can search for
     # boxes at https://atlas.hashicorp.com/search.
     config.vm.box           = 'bento/ubuntu-16.04'
-    config.vm.hostname      = settings['site']['host']
-    config.vm.network :private_network, :ip => settings['site']['ip']
+    config.vm.hostname      = settings['box']['name']
+    config.vm.network :private_network, :ip => settings['box']['ip']
 
     # Setup directories synchronization mode
     if Vagrant::Util::Platform.windows?
@@ -91,7 +97,7 @@ Vagrant.configure(2) do |config|
             cpus = settings['box']['cpus']
         end
 
-        vb.name = settings['site']['host']
+        vb.name = settings['box']['name']
         vb.customize [ 'modifyvm', :id, '--cpus', cpus ]
         vb.customize [ 'modifyvm', :id, '--memory', settings['box']['memsize'] ]
         vb.customize [ 'modifyvm', :id, '--natdnshostresolver1', 'on']
@@ -118,6 +124,6 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", inline: "service apache2 restart", run: "always", privileged: "false"
 
-    config.vm.post_up_message = "Vagrant Box up and running!" +
-        "See more information and tools available at http://" + settings['site']['host'] + "/info"
+    config.vm.post_up_message = "Vagrant Box up and running! " +
+        "See more information and tools available at https://" + settings['box']['name'] + "/box"
 end

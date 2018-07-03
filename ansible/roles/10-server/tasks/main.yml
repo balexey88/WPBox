@@ -6,7 +6,7 @@
     pkg: "{{ item }}"
     state: latest
     update_cache: yes
-  with_items: "{{ os.packages }}"
+  with_items: "{{ box.packages }}"
 
 - name: Upgrade system
   become_user: root
@@ -28,6 +28,21 @@
 - name: SSH to vagrant by default
   lineinfile:
     dest: /home/vagrant/.bashrc
-    line: "cd {{ base_path }}"
+    line: "cd {{ path.root }}"
     state: present
     insertafter: EOF
+
+- name: Update timezone
+  become_user: root
+  become: true
+  command: 'timedatectl set-timezone "{{ box.timezone }}"'
+
+- name: Update date/time synchronization
+  become_user: root
+  become: true
+  command: 'timedatectl set-ntp on'
+
+- name: Restart NTP service
+  become_user: root
+  become: true
+  service: name=ntp state=restarted

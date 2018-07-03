@@ -1,4 +1,4 @@
 ---
 - name: Install MariaDB?
   include_tasks: install.yml
-  when: db.server == "mariadb"
+  when: db.server|lower == "mariadb"

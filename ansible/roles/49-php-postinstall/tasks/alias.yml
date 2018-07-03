@@ -1,0 +1,29 @@
+---
+- name: Determine alias path
+  set_fact:
+    alias_path: "{{ dirs.base }}{{ dirs.web }}/{{ item }}"
+
+- name: Create alias dir
+  file:
+    path: "{{ alias_path }}"
+    state: directory
+    mode: 0755
+
+- name: Add aliase in Apache
+  become_user: root
+  become: true
+  template:
+    src: templates/alias.conf.j2
+    dest: "/etc/apache2/sites-available/aliases/{{ item }}.conf"
+    owner: root
+    mode: 0644
+
+- name: Check if template file exists
+  local_action: stat path="{{ role_path }}/templates/{{ item }}.php.j2"
+  register: alias_template_file
+
+- name: Place alias template
+  template:
+    src: "templates/{{ item }}.php.j2"
+    dest: "{{ alias_path }}/index.php"
+  when: alias_template_file.stat.exists is defined and alias_template_file.stat.exists == true
