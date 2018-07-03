@@ -7,15 +7,15 @@
     - vars.yml
   roles:
     - 10-server
-    # - 20-mysql
-    # - 25-mariadb
-    # - 30-apache2
-    # - 40-php5.6
-    # - 45-php7
-    # - 49-php-postinstall
-    # - 50-composer
-    # - 60-phpMyAdmin
-    # - 70-wp-cli
-    # - 80-wordpress
-    # - 85-bedrock
-    # - 89-postinstall
+    - 20-mysql
+    - 25-mariadb
+    - 30-apache2
+    - 40-php5.6
+    - 45-php7
+    - 49-php-postinstall
+    - 50-composer
+    - 60-phpMyAdmin
+    - 70-wp-cli
+    - 80-wordpress
+    - 85-bedrock
+    - 89-postinstall

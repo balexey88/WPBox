@@ -1,26 +1,23 @@
 ---
-- name: Additional dirs
-  file:
-      path: "{{ dirs.base }}{{ dirs.web }}{{ item }}"
-      state: directory
-      mode: 0755
+- name: Additional aliases
+  include_tasks: alias.yml
   with_items: "{{ path.aliases }}"
 
-- name: Add aliases in Apache
-  become_user: root
-  become: true
-  template:
-    src: templates/alias.conf.j2
-    dest: "/etc/apache2/sites-available/aliases/{{ item }}.conf"
-    owner: root
-    mode: 0644
-  with_items: "{{ path.aliases }}"
-
-- name: Place PHP-Info file for http://{{ ansible_fqdn }}/info
-  template:
-    src: templates/info.php.j2
-    dest: "{{ dirs.base }}{{ dirs.web }}/info/index.php"
-
+# - name: Add aliases in Apache
+#   become_user: root
+#   become: true
+#   template:
+#     src: templates/alias.conf.j2
+#     dest: "/etc/apache2/sites-available/aliases/{{ item }}.conf"
+#     owner: root
+#     mode: 0644
+#   with_items: "{{ path.aliases }}"
+#
+# - name: Place PHP-Info file for http://{{ ansible_fqdn }}/info
+#   template:
+#     src: templates/info.php.j2
+#     dest: "{{ dirs.base }}{{ dirs.web }}/info/index.php"
+#
 # - name: Place generic info file for http://{{ ansible_fqdn }}/box
 #   template:
 #     src: templates/box.php.j2

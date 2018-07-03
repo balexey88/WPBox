@@ -1,6 +1,6 @@
-Alias /{{ item }} {{ dirs.base }}{{ dirs.web }}/{{ item }}
+Alias /{{ item }} {{ alias_path }}
 
-<Directory {{ dirs.base }}{{ dirs.web }}/{{ item }}>
+<Directory {{ alias_path }}>
   Options Indexes FollowSymLinks Includes ExecCGI
   AllowOverride All
   Require all granted

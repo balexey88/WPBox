@@ -67,8 +67,13 @@ wp:
 
 # Database configuration
 db:
-  server: mariadb # 'mysql' or 'mariadb'
+  server: MariaDB # 'MySQL' or 'MariaDB'
   root_pass: 'root'
+
+# PHP configuration
+php:
+  default: 7.0
+  mem: '512M'
 
 # Ubuntu stuff
 os:

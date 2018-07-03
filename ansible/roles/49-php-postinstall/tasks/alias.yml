@@ -1,12 +1,15 @@
 ---
-- name: Additional dirs
-  file:
-      path: "{{ dirs.base }}{{ dirs.web }}{{ item }}"
-      state: directory
-      mode: 0755
-  with_items: "{{ path.aliases }}"
+- name: Determine alias path
+  set_fact:
+    alias_path: "{{ dirs.base }}{{ dirs.web }}/{{ item }}"
 
-- name: Add aliases in Apache
+- name: Create alias dir
+  file:
+    path: "{{ alias_path }}"
+    state: directory
+    mode: 0755
+
+- name: Add aliase in Apache
   become_user: root
   become: true
   template:
@@ -14,41 +17,13 @@
     dest: "/etc/apache2/sites-available/aliases/{{ item }}.conf"
     owner: root
     mode: 0644
-  with_items: "{{ path.aliases }}"
 
-- name: Place PHP-Info file for http://{{ ansible_fqdn }}/info
+- name: Check if template file exists
+  local_action: stat path="{{ role_path }}/templates/{{ item }}.php.j2"
+  register: alias_template_file
+
+- name: Place alias template
   template:
-    src: templates/info.php.j2
-    dest: "{{ dirs.base }}{{ dirs.web }}/info/index.php"
-
-- name: Place generic info file for http://{{ ansible_fqdn }}/box
-  template:
-    src: templates/box.php.j2
-    dest: "{{ dirs.base }}{{ dirs.web }}/box/index.php"
-
-# - name: Place generic box info file
-#   template:
-#     src: templates/box.php.j2
-#     dest: "{{ path.info }}/index.php"
-#
-- name: Disable all PHP versions
-  become_user: root
-  become: true
-  command: a2dismod {{ item }}
-  with_items:
-    - php5.6
-    - php7.0
-    # - php7.1
-    # - php7.2
-
-- name: Enable PHP{{ os.php.ver }}
-  become_user: root
-  become: true
-  command: a2enmod {{ item }}
-  with_items:
-    - "php{{ os.php.ver }}"
-
-- name: Restart Apache2 server
-  become_user: root
-  become: true
-  service: name=apache2 state=restarted
+    src: "templates/{{ item }}.php.j2"
+    dest: "{{ alias_path }}/index.php"
+  when: alias_template_file.stat.exists is defined and alias_template_file.stat.exists == true
