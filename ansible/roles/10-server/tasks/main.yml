@@ -6,7 +6,7 @@
     pkg: "{{ item }}"
     state: latest
     update_cache: yes
-  with_items: "{{ os.packages }}"
+  with_items: "{{ box.packages }}"
 
 - name: Upgrade system
   become_user: root
@@ -31,3 +31,18 @@
     line: "cd {{ path.root }}"
     state: present
     insertafter: EOF
+
+- name: Update timezone
+  become_user: root
+  become: true
+  command: 'timedatectl set-timezone "{{ box.timezone }}"'
+
+- name: Update date/time synchronization
+  become_user: root
+  become: true
+  command: 'timedatectl set-ntp on'
+
+- name: Restart NTP service
+  become_user: root
+  become: true
+  service: name=ntp state=restarted

@@ -4,7 +4,7 @@
 
 * Install Virtual Box (>=5.1 version is preferred) <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">Download</a>
 
-* Install Vagrant (>=2.1 version is preferred) <a href="https://www.vagrantup.com/downloads.html" target="_blank">Download</a>
+* Install Vagrant (>=2.0 version is preferred) <a href="https://www.vagrantup.com/downloads.html" target="_blank">Download</a>
 
 * Install Vagrant plugins:
 ``` bash
@@ -28,5 +28,5 @@ apt install nfs-kernel-server
 ``` bash
 vagrant up
 ```
----
-For the list of available tools and options please visit the http://[your box name]/box
+
+* For the list of available tools and options please visit the http://[your box name]/box

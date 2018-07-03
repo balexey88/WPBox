@@ -8,6 +8,18 @@ box:
   memsize: 2048
   cpus: 2
   sync: 'nfs'
+  timezone: 'Europe/Kiev'
+  packages:
+    - aptitude
+    - curl
+    - gettext
+    - git
+    - mc
+    - wget
+    - zip
+    - ntp
+    # - npm
+    # - nodejs-legacy
 
 # Base directory names
 dirs:
@@ -58,16 +70,6 @@ db:
 
 # Ubuntu stuff
 os:
-  packages:
-    - aptitude
-    - curl
-    - gettext
-    - git
-    - mc
-    - wget
-    - zip
-    # - npm
-    # - nodejs-legacy
   php:
     ver: 7.0
     mem: '512M'
