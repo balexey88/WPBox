@@ -12,9 +12,9 @@ vagrant plugin install vagrant-hostmanager
 vagrant plugin install hostmanager
 ```
 
-* On Ubuntu in order NFS to work you need to install 'nfs-kernel-server' package:
+* On Ubuntu to make NFS synchronization work you need to install **nfs-kernel-server** package:
 ``` bash
-apt-get install nfs-kernel-server
+apt install nfs-kernel-server
 ```
 ---
 
