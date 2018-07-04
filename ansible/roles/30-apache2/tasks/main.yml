@@ -45,6 +45,7 @@
     - ssl
     - actions
     - fastcgi
+    - proxy_fcgi
 
 - name: Change Apache2 user/group
   become_user: root

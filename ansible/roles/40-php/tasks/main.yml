@@ -27,6 +27,24 @@
   loop_control:
     loop_var: php_version
 
+- name: Restart fpm services
+  become_user: root
+  become: true
+  service:
+    name: "php{{ item.version }}-fpm"
+    state: restarted
+  with_items: "{{ php.versions }}"
+
+- name: Additional aliases
+  include_tasks: alias.yml
+  with_items: "{{ path.aliases }}"
+
+- name: Enable Apache2 configs for PHP fpm
+  become_user: root
+  become: true
+  command: "a2enconf php{{ item.version }}-fpm"
+  with_items: "{{ php.versions }}"
+
 - name: Restart Apache2 server
   become_user: root
   become: true
