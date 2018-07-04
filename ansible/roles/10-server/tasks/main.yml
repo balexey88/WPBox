@@ -25,7 +25,7 @@
   become: true
   command: update-locale
 
-- name: SSH to vagrant by default
+- name: SSH to /vagrant folder by default
   lineinfile:
     dest: /home/vagrant/.bashrc
     line: "cd {{ path.root }}"

@@ -13,12 +13,12 @@
     # - php7.1
     # - php7.2
 
-- name: Enable PHP{{ os.php.ver }}
+- name: Enable PHP{{ php.default }}
   become_user: root
   become: true
   command: a2enmod {{ item }}
   with_items:
-    - "php{{ os.php.ver }}"
+    - "php{{ php.default }}"
 
 - name: Restart Apache2 server
   become_user: root

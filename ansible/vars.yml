@@ -74,18 +74,36 @@ db:
 php:
   default: 7.0
   mem: '512M'
-
-# Ubuntu stuff
-os:
-  php:
-    ver: 7.0
-    mem: '512M'
-
-# Other
-verbous: true
+  versions:
+    -
+      version: 5.6
+      packages:
+        - xml
+    -
+      version: 7.0
+      packages: []
+  version_packages:
+    - curl
+    - dom
+    - gd
+    - imap
+    - intl
+    - mcrypt
+    - mysql
+    - mbstring
+    - soap
+    - sqlite3
+    - zip
+  packages:
+    - imagick
+    - gettext
+    - xdebug
 
 # Additional domains
 # hostmanager-aliases:
 #   - singlesites.dev
 #   - sample1.dev
 #   - sample1.singlesites.dev
+
+# Other
+verbous: true
