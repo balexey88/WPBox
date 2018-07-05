@@ -5,6 +5,17 @@
   apt: pkg={{ item }} state=latest
   with_items:
     - apache2
+    - libapache2-mod-fastcgi
+
+- name: update directory ownership for 'fastcgi'
+  become_user: root
+  become: true
+  file:
+      path: '/var/lib/apache2/fastcgi'
+      state: directory
+      owner: vagrant
+      group: vagrant
+      recurse: true
 
 - name: Create config dirs
   become_user: root
@@ -32,6 +43,9 @@
   with_items:
     - rewrite
     - ssl
+    - actions
+    - fastcgi
+    - proxy_fcgi
 
 - name: Change Apache2 user/group
   become_user: root

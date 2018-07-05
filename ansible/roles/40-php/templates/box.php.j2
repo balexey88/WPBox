@@ -15,6 +15,13 @@
         <h2>Web-server</h2>
 
         <p>Using <strong>Apache</strong> as a web-server. Self-signed SSL-certificate added, <a href="https://{{ ansible_fqdn }}" target="_blank">SSL version</a> of the site is available. Logs are available in the <kbd>/log</kbd> subfolder of the project.</p>
-        <p>Several <strong>PHP</strong> versions installed. Current version is {{ php.default }}, view <a href="https://{{ ansible_fqdn }}/info" target="_blank">phpinfo()</a></p>
+        <p>Several <strong>PHP</strong> versions installed (5.6, 7.0, 7.1, 7.2). Current version is {{ php.default }}, view <a href="https://{{ ansible_fqdn }}/info" target="_blank">phpinfo()</a></p>
+
+        <p>To enable particular version add the following to Apache's site config:</p>
+
+        <kbd style="display: block">&lt;Directory&gt;</kbd>
+        <kbd style="display: block">&nbsp;&nbsp;&nbsp;&nbsp;&hellip;</kbd>
+        <kbd style="display: block">&nbsp;&nbsp;&nbsp;&nbsp;Include/etc/apache2/conf-available/php5.6-fpm.conf</kbd>
+        <kbd style="display: block">&lt;/Directory&gt;</kbd>
     </body>
 </html>

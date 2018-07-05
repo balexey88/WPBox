@@ -10,9 +10,7 @@
     - 20-mysql
     - 25-mariadb
     - 30-apache2
-    - 40-php5.6
-    - 45-php7
-    - 49-php-postinstall
+    - 40-php
     - 50-composer
     - 60-phpMyAdmin
     - 70-wp-cli

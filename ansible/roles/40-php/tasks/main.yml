@@ -1,0 +1,50 @@
+---
+- name: Add PHP repository
+  become_user: root
+  become: true
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+    state: present
+
+- name: Install PHP versions
+  include_tasks: install.yml
+  with_items: "{{ php.versions }}"
+  loop_control:
+    loop_var: php_version
+
+- name: Install common PHP packages
+  become_user: root
+  become: true
+  apt:
+    pkg: "php-{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ php.packages }}"
+
+- name: Configure PHP versions
+  include_tasks: config.yml
+  with_items: "{{ php.versions }}"
+  loop_control:
+    loop_var: php_version
+
+- name: Restart fpm services
+  become_user: root
+  become: true
+  service:
+    name: "php{{ item.version }}-fpm"
+    state: restarted
+  with_items: "{{ php.versions }}"
+
+- name: Additional aliases
+  include_tasks: alias.yml
+  with_items: "{{ path.aliases }}"
+
+- name: Enable Apache2 configs for default PHP
+  become_user: root
+  become: true
+  command: "a2enconf php{{ php.default }}-fpm"
+
+- name: Restart Apache2 server
+  become_user: root
+  become: true
+  service: name=apache2 state=restarted

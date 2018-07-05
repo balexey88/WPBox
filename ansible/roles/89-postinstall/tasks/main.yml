@@ -5,7 +5,7 @@
   register: is_installed
 
 - name: Install WordPress
-  command: wp core install --url=http://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user.login }} --admin_password={{ wp.user.pass }} --admin_email={{ wp.user.email }}
+  command: wp core install --url=https://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user.login }} --admin_password={{ wp.user.pass }} --admin_email={{ wp.user.email }}
   when: is_installed|failed
 
 - name: Configure WordPress
@@ -18,7 +18,7 @@
   with_items:
     - { search: "^define.*WP_DEBUG", replace: "define( 'WP_DEBUG', true );"}
     - { search: "^define.*CONCATENATE_SCRIPTS", replace: "define( 'CONCATENATE_SCRIPTS', false );"}
-    - { search: "^define.*WP_MEMORY_LIMIT", replace: "define( 'WP_MEMORY_LIMIT', '{{ os.php.mem }}' );"}
+    - { search: "^define.*WP_MEMORY_LIMIT", replace: "define( 'WP_MEMORY_LIMIT', '{{ php.mem }}' );"}
   when: not wp.bedrock
 
 - name: Configure WordPress (bedrock)
@@ -28,7 +28,7 @@
   with_items:
     - { key: 'WP_DEBUG', value: true }
     - { key: 'CONCATENATE_SCRIPTS', value: false }
-    - { key: 'WP_MEMORY_LIMIT', value: "{{ os.php.mem }}" }
+    - { key: 'WP_MEMORY_LIMIT', value: "{{ php.mem }}" }
   when: wp.bedrock
 
 - name: Uninstall default plugins
