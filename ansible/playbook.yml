@@ -11,7 +11,9 @@
     - 25-mariadb
     - 30-apache2
     - 40-php
+    - 45-nodejs
     - 50-composer
+    - 55-yarn
     - 60-phpMyAdmin
     - 70-wp-cli
     - 80-wordpress

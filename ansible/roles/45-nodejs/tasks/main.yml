@@ -1,0 +1,15 @@
+---
+- name: Add Node.js repository
+  become_user: root
+  become: true
+  shell: curl -sL https://deb.nodesource.com/setup_8.x | bash -
+  args:
+    executable: /bin/bash
+    warn: false
+
+- name: Install Node.js
+  become_user: root
+  become: true
+  apt:
+    pkg: nodejs
+    state: latest
