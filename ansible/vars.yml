@@ -72,15 +72,24 @@ db:
 
 # PHP configuration
 php:
-  default: 7.0
+  default: 7.2
   mem: '512M'
   versions:
     -
       version: 5.6
       packages:
         - xml
+        - mcrypt
     -
       version: 7.0
+      packages:
+        - mcrypt
+    -
+      version: 7.1
+      packages:
+        - mcrypt
+    -
+      version: 7.2
       packages: []
   version_packages:
     - curl
@@ -88,7 +97,6 @@ php:
     - gd
     - imap
     - intl
-    - mcrypt
     - mysql
     - mbstring
     - soap

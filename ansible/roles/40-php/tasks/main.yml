@@ -39,11 +39,10 @@
   include_tasks: alias.yml
   with_items: "{{ path.aliases }}"
 
-- name: Enable Apache2 configs for PHP fpm
+- name: Enable Apache2 configs for default PHP
   become_user: root
   become: true
-  command: "a2enconf php{{ item.version }}-fpm"
-  with_items: "{{ php.versions }}"
+  command: "a2enconf php{{ php.default }}-fpm"
 
 - name: Restart Apache2 server
   become_user: root
