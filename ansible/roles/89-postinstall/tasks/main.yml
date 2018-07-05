@@ -6,7 +6,7 @@
 
 - name: Install WordPress
   command: wp core install --url=https://{{ ansible_fqdn }} --title="{{ wp.title }}" --admin_user={{ wp.user.login }} --admin_password={{ wp.user.pass }} --admin_email={{ wp.user.email }}
-  when: is_installed|failed
+  when: is_installed is failed
 
 - name: Configure WordPress
   lineinfile:

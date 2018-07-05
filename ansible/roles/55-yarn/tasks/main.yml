@@ -1,0 +1,24 @@
+---
+- name: Add Yarn repository key
+  become_user: root
+  become: true
+  shell: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+  args:
+    executable: /bin/bash
+    warn: false
+
+- name: Add Yarn repository
+  become_user: root
+  become: true
+  shell: echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+  args:
+    executable: /bin/bash
+    warn: false
+
+- name: Install Yarn
+  become_user: root
+  become: true
+  apt:
+    pkg: yarn
+    state: latest
+    update_cache: yes
