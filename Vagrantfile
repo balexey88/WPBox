@@ -113,6 +113,7 @@ Vagrant.configure(2) do |config|
             ansible.verbose = settings['verbose']
         end
 
+        ansible.extra_vars  = settings
         ansible.playbook    = 'ansible/playbook.yml'
     end
 
