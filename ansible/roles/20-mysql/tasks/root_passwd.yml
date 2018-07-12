@@ -5,7 +5,7 @@
     dest: ~/.my.cnf
 
 - name: Update MySQL root password
-  mysql_user: name=root host={{ item }} password={{ db.root_passwd }} state=present
+  mysql_user: name=root host={{ item }} password={{ db.root_pass }} state=present
   with_items:
     - "{{ ansible_hostname }}"
     - 127.0.0.1

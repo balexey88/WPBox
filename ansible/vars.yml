@@ -14,12 +14,10 @@ box:
     - curl
     - gettext
     - git
+    - ntp
     - mc
     - wget
     - zip
-    - ntp
-    # - npm
-    # - nodejs-legacy
 
 # Base directory names
 dirs:
