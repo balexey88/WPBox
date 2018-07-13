@@ -1,6 +1,6 @@
-Alias /my {{ path.phpmyadmin }}
+Alias /{{ item }} {{ alias_path }}
 
-<Directory {{ path.phpmyadmin }}>
+<Directory {{ alias_path }}>
   Options Indexes FollowSymLinks Includes ExecCGI
   AllowOverride All
   Require all granted

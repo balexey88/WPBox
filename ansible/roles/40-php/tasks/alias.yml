@@ -9,7 +9,21 @@
     state: directory
     mode: 0755
 
-- name: Add aliase in Apache
+- name: Check if specific alias config exists
+  local_action: stat path="{{ role_path }}/templates/{{ item }}.conf.j2"
+  register: alias_conf_file
+
+- name: Add alias in Apache
+  become_user: root
+  become: true
+  template:
+    src: "templates/{{ item }}.conf.j2"
+    dest: "/etc/apache2/sites-available/aliases/{{ item }}.conf"
+    owner: root
+    mode: 0644
+  when: alias_conf_file.stat.exists is defined and alias_conf_file.stat.exists == true
+
+- name: Add alias in Apache
   become_user: root
   become: true
   template:
@@ -17,6 +31,7 @@
     dest: "/etc/apache2/sites-available/aliases/{{ item }}.conf"
     owner: root
     mode: 0644
+  when: alias_conf_file.stat.exists is undefined or alias_conf_file.stat.exists == false
 
 - name: Check if template file exists
   local_action: stat path="{{ role_path }}/templates/{{ item }}.php.j2"

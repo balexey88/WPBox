@@ -112,4 +112,4 @@ php:
 #   - sample1.singlesites.dev
 
 # Other
-verbous: true
+verbose: true
