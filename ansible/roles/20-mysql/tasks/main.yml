@@ -1,4 +1,55 @@
 ---
-- name: Install MySQL?
-  include_tasks: install.yml
+- name: Install MySQL-server
+  become_user: root
+  become: true
+  apt:
+    pkg: mysql-server
+    state: latest
+    update_cache: yes
   when: db.server|lower == "mysql"
+
+- name: Install MariaDB-server
+  become_user: root
+  become: true
+  apt:
+    pkg: mariadb-server
+    state: latest
+    update_cache: yes
+  when: db.server|lower == "mariadb"
+
+- name: Install Python database access
+  become_user: root
+  become: true
+  apt:
+    pkg: python-mysqldb
+    state: latest
+    update_cache: yes
+
+- name: Create MySQL database for WordPress
+  become_user: root
+  become: true
+  mysql_db:
+    name: "{{ wp.db.name }}"
+    collation: utf8_general_ci
+    encoding: utf8
+    state: present
+
+- name: Create MySQL user for WordPress
+  become_user: root
+  become: true
+  mysql_user:
+      name: "{{ wp.db.user }}"
+      password: "{{ wp.db.pass }}"
+      host: "%"
+      priv: "*.*:ALL,GRANT"
+      state: present
+
+- name: Create default user access file
+  ini_file:
+      dest: "~/.my.cnf"
+      section: client
+      option: "{{ item.name }}"
+      value: "{{ item.value }}"
+  with_items:
+    - { name: 'user', value: '{{ wp.db.user }}' }
+    - { name: 'password', value: '{{ wp.db.pass }}' }
