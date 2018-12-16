@@ -12,14 +12,18 @@
   loop_control:
     loop_var: php_version
 
+- name: "Generating the list of common PHP packages"
+  set_fact:
+    php_common_packages: "{{ ( php_common_packages | default([]) ) + ['php-' + item] }}"
+  with_items: "{{ php.packages }}"
+
 - name: Install common PHP packages
   become_user: root
   become: true
   apt:
-    pkg: "php-{{ item }}"
+    pkg: "{{ php_common_packages }}"
     state: latest
     update_cache: yes
-  with_items: "{{ php.packages }}"
 
 - name: Configure PHP versions
   include_tasks: config.yml
@@ -44,6 +48,11 @@
   become: true
   command: "a2enconf php{{ php.default }}-fpm"
 
+- name: "Enable PHP{{ php.default }} cli"
+  become_user: root
+  become: true
+  command: "update-alternatives --set php /usr/bin/php{{ php.default }}"
+  
 - name: Restart Apache2 server
   become_user: root
   become: true
