@@ -47,7 +47,7 @@ wp:
   user: # default user
     login: 'admin'
     pass: '1'
-    email: 'a.bolgunovsky@codetiburon.com'
+    email: 'balexey88@gmail.com'
   db:
     name: 'wp'
     user: 'wp'
@@ -60,8 +60,6 @@ wp:
     plugins:
       - disable-emails
       - wp-mail-logging
-      - https://github.com/wp-sync-db/wp-sync-db/archive/master.zip
-      - https://github.com/wp-sync-db/wp-sync-db-media-files/archive/master.zip
 
 # Database configuration
 db:
@@ -106,9 +104,8 @@ php:
 
 # Additional domains
 # hostmanager-aliases:
-#   - singlesites.dev
-#   - sample1.dev
-#   - sample1.singlesites.dev
+#   - site.wp.wp
+#   - wp2.wp
 
 # Other
 verbose: true
