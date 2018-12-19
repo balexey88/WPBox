@@ -2,10 +2,11 @@
 - name: Install Apache2
   become_user: root
   become: true
-  apt: pkg={{ item }} state=latest
-  with_items:
-    - apache2
-    - libapache2-mod-fastcgi
+  apt:
+    pkg:
+      - apache2
+      - libapache2-mod-fastcgi
+    state: latest
 
 - name: update directory ownership for 'fastcgi'
   become_user: root

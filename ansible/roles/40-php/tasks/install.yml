@@ -1,29 +1,28 @@
 ---
+- name: "Determine PHP {{ php_version.version }} packages prefix"
+  set_fact:
+    php_prefix: "php{{ php_version.version }}-"
+
+- name: "Default PHP {{ php_version.version }} package list"
+  set_fact:
+    php_packages:
+      - php{{ php_version.version }}
+      - php{{ php_version.version }}-fpm
+
+- name: "Generating the list of PHP {{ php_version.version }} packages"
+  set_fact:
+    php_packages: "{{ php_packages + [php_prefix + item] }}"
+  with_items: "{{ php.version_packages }}"
+
+- name: "Adding PHP {{ php_version.version }} version-specific packages"
+  set_fact:
+    php_packages: "{{ (php_packages | default([]) ) + [php_prefix + item] }}"
+  with_items: "{{ php_version.packages }}"
+
 - name: "Install PHP {{ php_version.version }}"
   become_user: root
   become: true
   apt:
-    pkg: "{{ item }}"
+    pkg: "{{ php_packages }}"
     state: latest
     update_cache: yes
-  with_items:
-    - "php{{ php_version.version }}"
-    - "php{{ php_version.version }}-fpm"
-
-- name: "Install PHP {{ php_version.version }} packages"
-  become_user: root
-  become: true
-  apt:
-    pkg: "php{{ php_version.version }}-{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items: "{{ php.version_packages }}"
-
-- name: "Install PHP {{ php_version.version }} version-specific packages"
-  become_user: root
-  become: true
-  apt:
-    pkg: "php{{ php_version.version }}-{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items: "{{ php_version.packages }}"

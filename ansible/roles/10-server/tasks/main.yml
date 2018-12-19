@@ -3,10 +3,9 @@
   become_user: root
   become: true
   apt:
-    pkg: "{{ item }}"
+    pkg: "{{ box.packages }}"
     state: latest
     update_cache: yes
-  with_items: "{{ box.packages }}"
 
 - name: Upgrade system
   become_user: root

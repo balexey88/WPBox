@@ -9,7 +9,12 @@ box:
 # WordPress configuration
 wp:
   bedrock: true
-  version: latest
+  version: latest # '4.9.8'
   title: 'New Project'
   db:
     prefix: 'wp_'
+
+php:
+  default: 7.0
+
+verbose: false

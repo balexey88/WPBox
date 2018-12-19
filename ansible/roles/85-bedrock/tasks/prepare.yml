@@ -42,7 +42,7 @@
     - { key: 'DB_PASSWORD', value: "{{ wp.db.pass }}" }
     - { key: 'DB_PREFIX', value: "{{ wp.db.prefix }}" }
     - { key: 'WP_ENV', value: 'development' }
-    - { key: 'WP_HOME', value: "http://{{ ansible_fqdn }}" }
+    - { key: 'WP_HOME', value: "https://{{ ansible_fqdn }}" }
 
 - name: Generate salts
   args:
