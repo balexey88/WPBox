@@ -5,8 +5,8 @@ tmp/
 test/
 info/
 my/
-www/
-!www/wp
+www/*
+!www/vpanel/
 
 ansible/playbook.retry
 wp-config.php
